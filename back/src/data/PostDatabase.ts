@@ -122,11 +122,13 @@ export class PostDatabase extends MainDatabase {
         return feedArray
     }
 
-    public async deletePost(postId: string): Promise<void> {
+    public async deletePost(postId: string, author:string): Promise<void> {
         try {
             await this.getConnection()
             .select('*')
             .where({postId})
+            .and
+            .where({author})
             .del()
     
         } catch(err) {
