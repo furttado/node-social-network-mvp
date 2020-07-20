@@ -86,5 +86,24 @@ export class PostController {
         }
         await MainDatabase.destroyConnection()  
     }
+
+    async editPost(req:Request, res: Response) {
+        try {
+            const token = req.headers.token as string
+            const postId = req.body.postId
+            const title = req.body.title || undefined
+            const picture = req.body.picture || undefined
+            const description = req.body.description || undefined
+
+            await PostController.postBusiness.editPost(
+                token, postId, title || undefined, picture || undefined, description || undefined
+            )
+
+            res.status(200).send({message: 'Success'})
+        } catch (err) {
+            res.status(err.errorCode || 400).send({ message: err.message });
+        }
+        await MainDatabase.destroyConnection()  
+    }
 }
 

@@ -159,5 +159,27 @@ export class PostDatabase extends MainDatabase {
         }
 
     }
+
+    public async editPost(
+        author: string,
+        postId: string,
+        title?: string,
+        picture?: string,
+        description?: string,
+        ) {
+            try {
+                await this.getConnection()(this.tableName)
+            .update({
+                title,
+                picture,
+                description
+            })
+            .where({postId})
+            .and
+            .where({author})
+            }  catch(err) {
+                throw new Error(err.message);
+            }    
+        }
 }
 

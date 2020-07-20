@@ -2,6 +2,7 @@ import { PostDatabase } from "../data/PostDatabase"
 import { IdGenerator } from "../services/IdGenerator"
 import { Authenticator } from "../services/Authenticator"
 import { Post, toPostRole, PostsAndNicknameOutput } from "../models/PostModel"
+import { BadRequestError } from "../errors/BadRequestError";
 
 export class PostBusiness {
     private static POST_LIMIT = 5;
@@ -46,4 +47,21 @@ export class PostBusiness {
         const tokenData = new Authenticator().getData(token)
         return await this.postDb.getFeed(tokenData.id)
     }
+
+    public async editPost(token: string, postId:string, title?:string, picture?: string, description?:string) {
+        if(!token) {
+            throw new BadRequestError("Authorization token missing");                  
+        }
+        if(!postId) {
+            throw new BadRequestError("Post Id missing");                   
+        }
+        if(!title && !picture && !description) {
+            throw new BadRequestError("Enter at least one parameter to change");                
+        }
+
+        const tokenData = this.authenticator.getData(token)
+        await this.postDb.editPost(tokenData.id, postId, title || undefined, picture || undefined, description || undefined)
+
+    }
+
 }
