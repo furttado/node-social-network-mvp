@@ -115,4 +115,22 @@ export class UserController {
         }
         await MainDatabase.destroyConnection()  
     }
+
+    async editProfile(req:Request, res: Response) {
+        try {
+            const token = req.headers.token as string
+            const name = req.body.name || undefined
+            const nickname = req.body.nickname || undefined
+            const picture = req.body.picture || undefined
+
+            await UserController.userBusiness.editProfile(
+                token, name || undefined, nickname || undefined, picture || undefined
+            )
+
+            res.status(200).send({message: 'Success'})
+        } catch (err) {
+            res.status(err.errorCode || 400).send({ message: err.message });
+        }
+        await MainDatabase.destroyConnection()  
+    }
 }

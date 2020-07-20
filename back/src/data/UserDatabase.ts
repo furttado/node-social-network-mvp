@@ -124,6 +124,38 @@ export class UserDatabase extends MainDatabase {
 
     }
 
+    public async getOwnProfile(userId: string): Promise<User | undefined> {
+        try {
+            const queryData = await this.getConnection()
+            .select('*')
+            .where({userId})
+            .from(this.tableName)
+
+            const data = queryData[0][0]
+            if (!data) {
+                throw new NotFoundError('User not found')
+            }
+
+            const user = new User( 
+                data.id,
+                data.email,
+                data.undefined, 
+                data.nickname,
+                data.name,
+                data.picture,
+                data.undefined
+            )
+
+            const userPosts = await new PostDatabase().getPostsByUserId(user.getId()) 
+            user.setPosts(userPosts) 
+            
+            return user;
+
+        } catch(err) {
+            throw new Error(err.message); 
+        }
+    }
+
     public async followUserById(users: Friendship): Promise<void> { 
         try {
             const isFollowing = await this.isFollowing(users)
@@ -159,6 +191,21 @@ export class UserDatabase extends MainDatabase {
             throw new ForbiddenError('Operation not allowed: users are not connected');
         }
     } 
+
+    public async editProfile(userId: string, name?:string, nickname?: string, picture?:string): Promise<void> {
+        try {
+            await this.getConnection()(this.tableName)
+            .update({
+                name,
+                nickname,
+                picture
+            })
+            .where({id: userId})
+
+        } catch(err) {
+            throw new Error(err.message); 
+        }
+    }
 
     private async isFollowing(users: Friendship): Promise<boolean> {
         const result = await this.getConnection()
