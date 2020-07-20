@@ -5,11 +5,7 @@
   "main": "index.js",
 
   "scripts": {
-    "test": "node ./node_modules/jest/bin/jest.js",
-    "build": "tsc && node ./build/index.js",
-    "start:dev": "ts-node-dev ./src/server.ts",
-    "dev:debug": "nodemon --inspect src/server.ts",
-    "dev": "nodemon src/server.ts"
+    "start:dev": "ts-node-dev ./src/server.ts"
   },
 
   "engines": {
