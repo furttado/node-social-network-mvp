@@ -26,7 +26,7 @@ export class Authenticator {
     const payload = jwt.verify(token, process.env.JWT_KEY as string) as any;
     const result = {
       id: payload.id,
-      role: toUserRole(payload.role) // !!!
+      role: toUserRole(payload.role) 
     };
     return result;
   }
