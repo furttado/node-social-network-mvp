@@ -111,6 +111,11 @@ export class UserBusiness {
         return user
     }
 
+    public async getOwnProfile(token: string) {
+        const tokenData = this.authenticator.getData(token)
+        return await this.userDatabase.getOwnProfile(tokenData.id)
+    }
+
     public async followUser(token: string, userId: string) {
         if(!token || !userId) {
             return new BadRequestError('Missing input')
@@ -139,6 +144,19 @@ export class UserBusiness {
         } 
 
         await this.userDatabase.unfollowUser(users)
+    }
+
+    public async editProfile(token: string, name?:string, nickname?: string, picture?:string) {
+        if(!token) {
+            throw new BadRequestError("Authorization token missing");                  
+        }
+        if(!name && !nickname && !picture) {
+            throw new BadRequestError("Enter at least one parameter to change");                
+        }
+
+        const tokenData = this.authenticator.getData(token)
+        await this.userDatabase.editProfile(tokenData.id, name || undefined, nickname || undefined, picture || undefined)
+
     }
 }
 
