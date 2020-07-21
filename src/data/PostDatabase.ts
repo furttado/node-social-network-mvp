@@ -8,13 +8,13 @@ export class PostDatabase extends MainDatabase {
         try {
             await this.getConnection()
             .insert({
-                post_id: post.getPostId, 
-                title: post.getTitle, 
-                post_pic: post.getPicture, 
-                description: post.getDescription, 
-                post_time: post.getTime, 
-                post_role: post.getRole, 
-                author: post.getAuthor
+                post_id: post.getPostId(), 
+                title: post.getTitle(), 
+                post_pic: post.getPicture(), 
+                description: post.getDescription(), 
+                post_time: post.getTime(), 
+                post_role: post.getRole(), 
+                author: post.getAuthor()
             })
             .into(this.tableName)
 
@@ -28,7 +28,7 @@ export class PostDatabase extends MainDatabase {
             .select('*')
             .where({ author: userId })
             .from(this.tableName)
-            .orderBy('DESC')
+            .orderBy('post_time', 'desc')
 
         if (!posts) { return [] }
         
@@ -124,11 +124,9 @@ export class PostDatabase extends MainDatabase {
 
     public async deletePost(postId: string, author:string): Promise<void> {
         try {
-            await this.getConnection()
-            .select('*')
-            .where({postId})
-            .and
-            .where({author})
+            await this.getConnection()(this.tableName)
+            .where({post_id: postId})
+            .andWhere({author})
             .del()
     
         } catch(err) {
@@ -174,7 +172,7 @@ export class PostDatabase extends MainDatabase {
                 picture,
                 description
             })
-            .where({postId})
+            .where({post_id: postId})
             .and
             .where({author})
             }  catch(err) {

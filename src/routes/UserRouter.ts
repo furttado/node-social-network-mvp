@@ -8,4 +8,4 @@ userRouter.post('/approve', new UserController().approve);
 userRouter.get('/:id', new UserController().getUserbyId);
 userRouter.post('/follow', new UserController().followUser)
 userRouter.delete('/unfollow', new UserController().unfollowUser)
-userRouter.post('/edit', new UserController().editProfile)
+userRouter.post('/editProfile', new UserController().editProfile)

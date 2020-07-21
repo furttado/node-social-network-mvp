@@ -3,6 +3,7 @@ import { IdGenerator } from "../services/IdGenerator"
 import { Authenticator } from "../services/Authenticator"
 import { Post, toPostRole, PostsAndNicknameOutput } from "../models/PostModel"
 import { BadRequestError } from "../errors/BadRequestError";
+import { UnauthorizedError } from "../errors/Unauthorized Error";
 
 export class PostBusiness {
     private static POST_LIMIT = 5;
@@ -34,11 +35,20 @@ export class PostBusiness {
         await this.postDb.deletePost(postId, tokenData.id)
     }
     
-    public async getPostByUserId(userId: string) {
+    public async getPostByUserId(userId: string, token: string) {
+        const isAuthorized = this.authenticator.getData(token)
+        if(!isAuthorized) {
+            throw new UnauthorizedError('Invalid credentials')
+        }
         return await this.postDb.getPostsByUserId(userId)
     }
 
-    public async getPostsAndNickname(page: number) { 
+    public async getPostsAndNickname(page: number, token: string) { 
+        const isAuthorized = this.authenticator.getData(token)
+        if(!isAuthorized) {
+            throw new UnauthorizedError('Invalid credentials')
+        }
+
         const offset = PostBusiness.POST_LIMIT * (page - 1) 
         return await this.postDb.getPostsAndNickname(PostBusiness.POST_LIMIT, offset)
     }
