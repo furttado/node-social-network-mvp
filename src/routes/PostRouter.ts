@@ -4,8 +4,8 @@ import { PostController } from '../controller/PostController'
 export const postRouter = express.Router()
 
 postRouter.post('/create', new PostController().createPost)
-postRouter.delete('/:id', new PostController().deletePost)
+postRouter.delete('/delete', new PostController().deletePost)
 postRouter.get('/user/:id', new PostController().getPostByUserId)
-postRouter.get('/all/:page', new PostController().getPostsAndNickname)
+postRouter.get('/all/:page', new PostController().getAllPosts)
 postRouter.get('/feed', new PostController().getFeed)
 postRouter.post('/editPost', new PostController().editPost)

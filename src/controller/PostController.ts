@@ -5,6 +5,7 @@ import { MainDatabase } from "../data/MainDatabase";
 import { PostDatabase } from "../data/PostDatabase";
 import { IdGenerator } from "../services/IdGenerator";
 import { toPostRole } from "../models/PostModel";
+import { Console } from "console";
 
 export class PostController {
     private static postBusiness = new PostBusiness(
@@ -41,8 +42,7 @@ export class PostController {
     async deletePost(req: Request, res: Response) {
         try {
             const token = req.headers.token as string
-            const postId = req.params.id
-
+            const postId = req.body.postId
             await PostController.postBusiness.deletePost(postId, token)
 
             res.status(200).send({ message: "Post deleted successfully" })
@@ -55,7 +55,8 @@ export class PostController {
     async getPostByUserId(req: Request, res: Response) {
         try {
             const userId = req.params.id
-            const post = await PostController.postBusiness.getPostByUserId(userId)
+            const token = req.headers.token as string
+            const post = await PostController.postBusiness.getPostByUserId(userId, token)
             
             res.status(200).send(post)
         } catch (err) {
@@ -64,10 +65,11 @@ export class PostController {
         await MainDatabase.destroyConnection()
     } 
 
-    async getPostsAndNickname(req: Request, res: Response) {
+    async getAllPosts(req: Request, res: Response) {
         try {
+            const token = req.headers.token as string
             const page = Number(req.params.page)
-            const posts = await PostController.postBusiness.getPostsAndNickname(page)
+            const posts = await PostController.postBusiness.getPostsAndNickname(page, token)
 
             res.status(200).send(posts)
         } catch (err) {

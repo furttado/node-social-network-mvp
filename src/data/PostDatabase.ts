@@ -124,11 +124,9 @@ export class PostDatabase extends MainDatabase {
 
     public async deletePost(postId: string, author:string): Promise<void> {
         try {
-            await this.getConnection()
-            .select('*')
-            .where({postId})
-            .and
-            .where({author})
+            await this.getConnection()(this.tableName)
+            .where({post_id: postId})
+            .andWhere({author})
             .del()
     
         } catch(err) {
@@ -174,7 +172,7 @@ export class PostDatabase extends MainDatabase {
                 picture,
                 description
             })
-            .where({postId})
+            .where({post_id: postId})
             .and
             .where({author})
             }  catch(err) {
