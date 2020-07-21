@@ -39,11 +39,11 @@ export class UserBusiness {
         if(!this.inputChecker.checkImageUrl(picture)) {
             throw new BadRequestError('It is not a valid image URL: <https><http>://wwww.domain.com/imageName.<jpg/jpeg/png/gif>');    
         }
-
+/*
         if(!nickname || !name || !userRole) {
             throw new BadRequestError("Missing 'nickname', 'name' or 'UserRole'"); 
         }
-
+*/
         const id: string = this.idGenerator.generateId()
         const hashPassword = await this.hashManager.hash(password)
 
