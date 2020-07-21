@@ -6,6 +6,7 @@ import { UserDatabase } from "../data/UserDatabase";
 import { IdGenerator } from "../services/IdGenerator";
 import { HashManager } from "../services/HashManager";
 import { InputChecker } from "../services/InputChecker";
+import { toUserRole } from "../models/UserModel";
 
 export class UserController {
     private static userBusiness = new UserBusiness(
@@ -34,7 +35,7 @@ export class UserController {
                 receivedData.nickname, 
                 receivedData.name,
                 receivedData.picture, 
-                receivedData.role
+                toUserRole(receivedData.role)
                 )
 
             res.status(201).send({ accessToken: createUserAndGetAccessToken })
