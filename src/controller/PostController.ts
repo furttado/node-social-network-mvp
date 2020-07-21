@@ -4,6 +4,7 @@ import { Authenticator } from "../services/Authenticator";
 import { MainDatabase } from "../data/MainDatabase";
 import { PostDatabase } from "../data/PostDatabase";
 import { IdGenerator } from "../services/IdGenerator";
+import { toPostRole } from "../models/PostModel";
 
 export class PostController {
     private static postBusiness = new PostBusiness(
@@ -27,7 +28,7 @@ export class PostController {
                 receivedData.title,
                 receivedData.picture,
                 receivedData.description,
-                receivedData.role,
+                toPostRole(receivedData.role)
             )
     
             res.status(201).send({message: "Post created successfully"})

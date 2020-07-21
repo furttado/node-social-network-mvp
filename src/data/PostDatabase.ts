@@ -8,13 +8,13 @@ export class PostDatabase extends MainDatabase {
         try {
             await this.getConnection()
             .insert({
-                post_id: post.getPostId, 
-                title: post.getTitle, 
-                post_pic: post.getPicture, 
-                description: post.getDescription, 
-                post_time: post.getTime, 
-                post_role: post.getRole, 
-                author: post.getAuthor
+                post_id: post.getPostId(), 
+                title: post.getTitle(), 
+                post_pic: post.getPicture(), 
+                description: post.getDescription(), 
+                post_time: post.getTime(), 
+                post_role: post.getRole(), 
+                author: post.getAuthor()
             })
             .into(this.tableName)
 
@@ -28,7 +28,7 @@ export class PostDatabase extends MainDatabase {
             .select('*')
             .where({ author: userId })
             .from(this.tableName)
-            .orderBy('DESC')
+            .orderBy('post_time', 'desc')
 
         if (!posts) { return [] }
         
