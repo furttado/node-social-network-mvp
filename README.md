@@ -44,13 +44,15 @@
 
 ## ⚡ Try it yourself
 
-* Swagger: https://app.swaggerhub.com/apis/furttado/SocialApp/1.0
+* Swagger: https://app.swaggerhub.com/apis-docs/furttado/SocialApp/1.0
 * Insomnia: https://github.com/furttado/node-socialNetwork-MVP/blob/master/Insomnia_Social%20Network.json
   * Download this json file
+  
   * Download Insomnia
+  
   * Drag and drop json file to Insomnia
-
-
+  
+    
 
 ## **:arrow_down:** Clone this project
 
