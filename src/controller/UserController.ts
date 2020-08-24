@@ -39,7 +39,7 @@ export class UserController {
         toUserRole(receivedData.role) || undefined
       );
 
-      res.status(201).send({ accessToken: createUserAndGetAccessToken });
+      res.status(201).send(createUserAndGetAccessToken);
     } catch (err) {
       res.status(err.errorCode || 400).send({ message: err.message });
     }
