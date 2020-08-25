@@ -52,7 +52,6 @@ export class PostDatabase extends MainDatabase {
   }
 
   async getPostsAndNickname(limit: number, offset: number): Promise<PostsAndNicknameOutput[]> {
-    console.log("entrou");
     const result = await this.getConnection().raw(`
     SELECT  *
     FROM post
@@ -63,7 +62,7 @@ export class PostDatabase extends MainDatabase {
         `);
 
     /*
-         SELECT  post_id 'postId', title, description, post_pic 'picture', post_time 'time', author, author_nickname 
+         SELECT  post_id, title, description, post_pic, post_time, author, author_nickname, name, picture 
             FROM post
             JOIN user
             ON user.nickname = post.autor_nickname AND user.id = post.author
@@ -71,14 +70,13 @@ export class PostDatabase extends MainDatabase {
             OFFSET ${offset}           
         */
     const posts = result[0];
-    console.log(posts);
     if (posts) {
       const postsArray: PostsAndNicknameOutput[] = [];
       for (let post of posts) {
         postsArray.push({
-          postId: post.postId,
+          postId: post.post_id,
           title: post.title,
-          picture: post.picture,
+          picture: post.post_pic,
           description: post.description,
           time: post.time,
           role: post.role,
