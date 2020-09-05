@@ -9,6 +9,6 @@ userRouter.get("/:id", new UserController().getUserbyId);
 userRouter.get("/profiles/user", new UserController().getOwnProfile);
 userRouter.get("/profiles/:nickname", new UserController().getAnyProfile);
 userRouter.post("/follow", new UserController().followUser);
-userRouter.delete("/unfollow", new UserController().unfollowUser);
+userRouter.delete("/unfollow/:nickname", new UserController().unfollowUser);
 userRouter.post("/editprofile", new UserController().editProfile);
 userRouter.post("/editnickname", new UserController().editNickname);

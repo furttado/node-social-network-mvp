@@ -166,12 +166,18 @@ export class UserDatabase extends MainDatabase {
     try {
       const user2Id = await this.getUserIdByNickname(user2);
       const newUsers = new Friendship(user1, user2Id);
-      const isFollowing = await this.isFollowing(newUsers);
-
-      if (!isFollowing) {
-        return await this.getBasicProfile(user2Id);
+      const isApproved = await this.isApproved(newUsers);
+      const isRequested = await this.isFollowing(newUsers);
+      if (!isApproved) {
+        return {
+          isRequested: isRequested,
+          user: await this.getBasicProfile(user2Id),
+        };
       }
-      return await this.getUserById(newUsers);
+      return {
+        isFollowing: true,
+        user: await this.getUserById(newUsers),
+      };
     } catch (err) {
       throw new Error(err.message);
     }
@@ -199,19 +205,18 @@ export class UserDatabase extends MainDatabase {
     }
   }
 
-  public async unfollowUser(users: Friendship): Promise<void> {
-    const userIdToFollow = await this.getUserIdByNickname(users.getFollowed());
-    const newUsers = new Friendship(users.getFollower(), userIdToFollow);
+  public async unfollowUser(users: Friendship): Promise<any> {
+    const userIdToUnfollow = await this.getUserIdByNickname(users.getFollowed());
+    const newUsers = new Friendship(users.getFollower(), userIdToUnfollow);
 
     const isFollowing = await this.isFollowing(newUsers);
 
     if (isFollowing) {
-      await this.getConnection()
-        .select("*")
-        .from("friendship")
-        .where("user_follower", "=", newUsers.getFollower())
-        .and.where("user_followed", "=", newUsers.getFollowed())
-        .del();
+      await this.getConnection().raw(`
+        DELETE FROM friendship 
+        WHERE user_follower = '${newUsers.getFollower()}' 
+        AND user_followed = '${newUsers.getFollowed()}'
+      `);
     } else {
       throw new ForbiddenError("Operation not allowed: users are not connected");
     }
@@ -246,6 +251,7 @@ export class UserDatabase extends MainDatabase {
       throw new Error(err.message);
     }
   }
+
   public async editProfile(
     userId: string,
     name?: string,
@@ -266,6 +272,7 @@ export class UserDatabase extends MainDatabase {
       throw new Error(err.message);
     }
   }
+
   public async editNickname(userId: string, nickname: string): Promise<any> {
     try {
       const result = await this.getConnection().raw(`
@@ -296,6 +303,17 @@ export class UserDatabase extends MainDatabase {
       .from("friendship")
       .where("user_follower", "=", users.getFollower())
       .and.where("user_followed", "=", users.getFollowed());
+
+    return (result.length !== 0 && true) || false;
+  }
+
+  private async isApproved(users: Friendship): Promise<boolean> {
+    const result = await this.getConnection()
+      .select("*")
+      .from("friendship")
+      .where("user_follower", "=", users.getFollower())
+      .and.where("user_followed", "=", users.getFollowed())
+      .and.where("is_approved", "=", 1);
 
     return (result.length !== 0 && true) || false;
   }

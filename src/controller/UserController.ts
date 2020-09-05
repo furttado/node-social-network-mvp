@@ -43,7 +43,6 @@ export class UserController {
     } catch (err) {
       res.status(err.errorCode || 400).send({ message: err.message });
     }
-    await MainDatabase.destroyConnection();
   }
 
   async login(req: Request, res: Response) {
@@ -104,7 +103,6 @@ export class UserController {
     } catch (err) {
       res.status(err.errorCode || 400).send({ message: err.message });
     }
-    await MainDatabase.destroyConnection();
   }
 
   async getOwnProfile(req: Request, res: Response) {
@@ -116,7 +114,6 @@ export class UserController {
     } catch (err) {
       res.status(err.errorCode || 400).send({ message: err.message });
     }
-    await MainDatabase.destroyConnection();
   }
 
   async followUser(req: Request, res: Response) {
@@ -130,13 +127,12 @@ export class UserController {
     } catch (err) {
       res.status(err.errorCode || 400).send({ message: err.message });
     }
-    await MainDatabase.destroyConnection();
   }
 
   async unfollowUser(req: Request, res: Response) {
     try {
       const token = req.headers.token as string;
-      const nickname = req.body.nickname;
+      const nickname = req.params.nickname;
 
       await UserController.userBusiness.unfollowUser(token, nickname);
 
@@ -144,21 +140,18 @@ export class UserController {
     } catch (err) {
       res.status(err.errorCode || 400).send({ message: err.message });
     }
-    await MainDatabase.destroyConnection();
   }
 
   async editProfile(req: Request, res: Response) {
     try {
       const token = req.headers.token as string;
       const name = req.body.name || undefined;
-      //const nickname = req.body.nickname || undefined;
       const picture = req.body.picture || undefined;
       const bio = req.body.bio || undefined;
 
       await UserController.userBusiness.editProfile(
         token,
         name || undefined,
-        //nickname || undefined,
         picture || undefined,
         bio || undefined
       );
@@ -167,7 +160,6 @@ export class UserController {
     } catch (err) {
       res.status(err.errorCode || 400).send({ message: err.message });
     }
-    await MainDatabase.destroyConnection();
   }
 
   async editNickname(req: Request, res: Response) {

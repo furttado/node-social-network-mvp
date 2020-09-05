@@ -127,19 +127,7 @@ export class UserBusiness {
     //const users = new Friendship(tokenData.id, followerNickname);
     const user = await this.userDatabase.getAnyProfile(tokenData.id, followerNickname);
 
-    if (!user.posts) {
-      const data = {
-        isFollowing: false,
-        user,
-      };
-      return data;
-    } else {
-      const data = {
-        isFollowing: true,
-        user,
-      };
-      return data;
-    }
+    return user;
   }
 
   public async getOwnProfile(token: string) {
@@ -176,7 +164,6 @@ export class UserBusiness {
     if (users.isEqual()) {
       throw new PreconditionFailedError("IDs must be different");
     }
-
     await this.userDatabase.unfollowUser(users);
   }
 

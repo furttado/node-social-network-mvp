@@ -5,7 +5,6 @@ import { MainDatabase } from "../data/MainDatabase";
 import { PostDatabase } from "../data/PostDatabase";
 import { IdGenerator } from "../services/IdGenerator";
 import { toPostRole } from "../models/PostModel";
-import { Console } from "console";
 
 export class PostController {
   private static postBusiness = new PostBusiness(
@@ -36,7 +35,6 @@ export class PostController {
     } catch (err) {
       res.status(err.errorCode || 400).send({ message: err.message });
     }
-    await MainDatabase.destroyConnection();
   }
 
   async deletePost(req: Request, res: Response) {
@@ -49,7 +47,6 @@ export class PostController {
     } catch (err) {
       res.status(err.errorCode || 400).send({ message: err.message });
     }
-    await MainDatabase.destroyConnection();
   }
 
   async getPostsFromFriend(req: Request, res: Response) {
@@ -61,7 +58,6 @@ export class PostController {
     } catch (err) {
       res.status(err.errorCode || 400).send({ message: err.message });
     }
-    await MainDatabase.destroyConnection();
   }
 
   async getAllPosts(req: Request, res: Response) {
@@ -74,7 +70,6 @@ export class PostController {
     } catch (err) {
       res.status(err.errorCode || 400).send({ message: err.message });
     }
-    await MainDatabase.destroyConnection();
   }
 
   async getFeed(req: Request, res: Response) {
@@ -86,7 +81,6 @@ export class PostController {
     } catch (err) {
       res.status(err.errorCode || 400).send({ message: err.message });
     }
-    await MainDatabase.destroyConnection();
   }
 
   async editPost(req: Request, res: Response) {
@@ -109,6 +103,5 @@ export class PostController {
     } catch (err) {
       res.status(err.errorCode || 400).send({ message: err.message });
     }
-    await MainDatabase.destroyConnection();
   }
 }
