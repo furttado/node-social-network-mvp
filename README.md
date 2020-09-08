@@ -45,7 +45,7 @@
 ## ⚡ Try it yourself
 
 * Swagger: https://app.swaggerhub.com/apis-docs/furttado/SocialApp/1.0
-* Insomnia: https://github.com/furttado/node-socialNetwork-MVP/blob/master/Insomnia_Social%20Network.json
+* Insomnia: https://github.com/furttado/node-social-network-mvp/blob/master/Insomnia_Social%20Network.json
   * Download this json file
   
   * Download Insomnia
