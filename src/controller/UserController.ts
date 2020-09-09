@@ -141,6 +141,18 @@ export class UserController {
       res.status(err.errorCode || 400).send({ message: err.message });
     }
   }
+  async rejectFollower(req: Request, res: Response) {
+    try {
+      const token = req.headers.token as string;
+      const nickname = req.params.nickname;
+
+      await UserController.userBusiness.rejectFollower(token, nickname);
+
+      res.status(200).send({ message: "Success" });
+    } catch (err) {
+      res.status(err.errorCode || 400).send({ message: err.message });
+    }
+  }
 
   async editProfile(req: Request, res: Response) {
     try {
