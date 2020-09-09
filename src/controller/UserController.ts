@@ -75,7 +75,7 @@ export class UserController {
     } catch (err) {
       res.status(err.errorCode || 400).send({ message: err.message });
     }
-    await MainDatabase.destroyConnection();
+    //await MainDatabase.destroyConnection();
   }
 
   async getUserbyId(req: Request, res: Response) {
