@@ -75,7 +75,6 @@ export class UserController {
     } catch (err) {
       res.status(err.errorCode || 400).send({ message: err.message });
     }
-    //await MainDatabase.destroyConnection();
   }
 
   async getUserbyId(req: Request, res: Response) {
@@ -190,6 +189,17 @@ export class UserController {
     try {
       const token = req.headers.token as string;
       const result = await UserController.userBusiness.getFollowRequests(token);
+
+      res.status(200).send(result);
+    } catch (err) {
+      res.status(err.errorCode || 400).send({ message: err.message });
+    }
+  }
+  async searchForUser(req: Request, res: Response) {
+    try {
+      const token = req.headers.token as string;
+      const keyword = req.params.keyword;
+      const result = await UserController.userBusiness.searchForUser(token, keyword);
 
       res.status(200).send(result);
     } catch (err) {

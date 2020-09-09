@@ -260,4 +260,17 @@ export class UserBusiness {
 
     return result;
   }
+
+  public async searchForUser(token: string, userName: string) {
+    if (!token) {
+      throw new BadRequestError("Authorization token missing");
+    }
+    const tokenData = this.authenticator.getData(token);
+    if (!tokenData) {
+      throw new UnauthorizedError("Invalid token");
+    }
+
+    const result = await this.userDatabase.searchForUser(userName);
+    return result;
+  }
 }

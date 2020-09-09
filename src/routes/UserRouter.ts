@@ -13,4 +13,6 @@ userRouter.post("/editnickname", new UserController().editNickname);
 userRouter.delete("/unfollow/:nickname", new UserController().unfollowUser);
 userRouter.delete("/reject/:nickname", new UserController().rejectFollower);
 userRouter.get("/profiles/:nickname", new UserController().getAnyProfile);
+userRouter.get("/search/:keyword", new UserController().searchForUser);
+
 //userRouter.get("/:id", new UserController().getUserbyId);
