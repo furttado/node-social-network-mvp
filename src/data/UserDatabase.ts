@@ -297,6 +297,21 @@ export class UserDatabase extends MainDatabase {
     }
   }
 
+  public async getFollowRequests(userId: string): Promise<any> {
+    try {
+      const result = await this.getConnection().raw(`
+      SELECT  name, nickname, picture
+      FROM friendship 
+      JOIN user
+      ON user_followed = '${userId}' AND is_approved = 0
+      AND user.id = user_follower;
+      `);
+      return result[0];
+    } catch (err) {
+      throw new Error(err.message);
+    }
+  }
+
   private async isFollowing(users: Friendship): Promise<boolean> {
     const result = await this.getConnection()
       .select("*")

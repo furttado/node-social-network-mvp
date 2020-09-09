@@ -237,4 +237,13 @@ export class UserBusiness {
       user,
     };
   }
+  public async getFollowRequests(token: string) {
+    if (!token) {
+      throw new BadRequestError("Authorization token missing");
+    }
+    const tokenData = this.authenticator.getData(token);
+    const result = await this.userDatabase.getFollowRequests(tokenData.id);
+
+    return result;
+  }
 }

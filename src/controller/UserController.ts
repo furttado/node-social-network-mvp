@@ -174,4 +174,14 @@ export class UserController {
       res.status(err.errorCode || 400).send({ message: err.message });
     }
   }
+  async getFollowRequests(req: Request, res: Response) {
+    try {
+      const token = req.headers.token as string;
+      const result = await UserController.userBusiness.getFollowRequests(token);
+
+      res.status(200).send(result);
+    } catch (err) {
+      res.status(err.errorCode || 400).send({ message: err.message });
+    }
+  }
 }
