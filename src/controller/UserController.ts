@@ -61,7 +61,6 @@ export class UserController {
     } catch (err) {
       res.status(err.errorCode || 400).send({ message: err.message });
     }
-    await MainDatabase.destroyConnection();
   }
 
   async approve(req: Request, res: Response) {
