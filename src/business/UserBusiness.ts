@@ -167,6 +167,20 @@ export class UserBusiness {
     await this.userDatabase.unfollowUser(users);
   }
 
+  public async rejectFollower(token: string, nickname: string) {
+    if (!token || !nickname) {
+      return new BadRequestError("Missing input");
+    }
+
+    const tokenData = this.authenticator.getData(token);
+    const users = new Friendship(tokenData.id, nickname);
+
+    if (users.isEqual()) {
+      throw new PreconditionFailedError("IDs must be different");
+    }
+    await this.userDatabase.rejectFollower(users);
+  }
+
   public async approve(token: string, nicknameToApprove: string) {
     if (!token || !nicknameToApprove) {
       throw new BadRequestError("Missing input");
@@ -236,5 +250,27 @@ export class UserBusiness {
       accessToken,
       user,
     };
+  }
+  public async getFollowRequests(token: string) {
+    if (!token) {
+      throw new BadRequestError("Authorization token missing");
+    }
+    const tokenData = this.authenticator.getData(token);
+    const result = await this.userDatabase.getFollowRequests(tokenData.id);
+
+    return result;
+  }
+
+  public async searchForUser(token: string, userName: string) {
+    if (!token) {
+      throw new BadRequestError("Authorization token missing");
+    }
+    const tokenData = this.authenticator.getData(token);
+    if (!tokenData) {
+      throw new UnauthorizedError("Invalid token");
+    }
+
+    const result = await this.userDatabase.searchForUser(userName);
+    return result;
   }
 }

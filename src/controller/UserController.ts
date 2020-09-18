@@ -61,7 +61,6 @@ export class UserController {
     } catch (err) {
       res.status(err.errorCode || 400).send({ message: err.message });
     }
-    await MainDatabase.destroyConnection();
   }
 
   async approve(req: Request, res: Response) {
@@ -75,7 +74,6 @@ export class UserController {
     } catch (err) {
       res.status(err.errorCode || 400).send({ message: err.message });
     }
-    await MainDatabase.destroyConnection();
   }
 
   async getUserbyId(req: Request, res: Response) {
@@ -141,6 +139,18 @@ export class UserController {
       res.status(err.errorCode || 400).send({ message: err.message });
     }
   }
+  async rejectFollower(req: Request, res: Response) {
+    try {
+      const token = req.headers.token as string;
+      const nickname = req.params.nickname;
+
+      await UserController.userBusiness.rejectFollower(token, nickname);
+
+      res.status(200).send({ message: "Success" });
+    } catch (err) {
+      res.status(err.errorCode || 400).send({ message: err.message });
+    }
+  }
 
   async editProfile(req: Request, res: Response) {
     try {
@@ -168,6 +178,27 @@ export class UserController {
       const nickname = req.body.nickname;
 
       const result = await UserController.userBusiness.editNickname(token, nickname);
+
+      res.status(200).send(result);
+    } catch (err) {
+      res.status(err.errorCode || 400).send({ message: err.message });
+    }
+  }
+  async getFollowRequests(req: Request, res: Response) {
+    try {
+      const token = req.headers.token as string;
+      const result = await UserController.userBusiness.getFollowRequests(token);
+
+      res.status(200).send(result);
+    } catch (err) {
+      res.status(err.errorCode || 400).send({ message: err.message });
+    }
+  }
+  async searchForUser(req: Request, res: Response) {
+    try {
+      const token = req.headers.token as string;
+      const keyword = req.params.keyword;
+      const result = await UserController.userBusiness.searchForUser(token, keyword);
 
       res.status(200).send(result);
     } catch (err) {

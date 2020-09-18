@@ -297,6 +297,47 @@ export class UserDatabase extends MainDatabase {
     }
   }
 
+  public async getFollowRequests(userId: string): Promise<any> {
+    try {
+      const result = await this.getConnection().raw(`
+      SELECT  name, nickname, picture
+      FROM friendship 
+      JOIN user
+      ON user_followed = '${userId}' AND is_approved = 0
+      AND user.id = user_follower;
+      `);
+      return result[0];
+    } catch (err) {
+      throw new Error(err.message);
+    }
+  }
+
+  public async rejectFollower(users: Friendship): Promise<any> {
+    try {
+      const userIdToReject = await this.getUserIdByNickname(users.getFollowed());
+      const newUsers = new Friendship(users.getFollower(), userIdToReject);
+
+      await this.getConnection().raw(`
+        DELETE FROM friendship 
+        WHERE user_follower = '${newUsers.getFollowed()}' 
+        AND user_followed = '${newUsers.getFollower()}'
+      `);
+    } catch (err) {
+      throw new Error(err.message);
+    }
+  }
+
+  public async searchForUser(userName: string): Promise<any> {
+    try {
+      const result = await this.getConnection().raw(`
+      SELECT name, nickname, picture FROM ${this.tableName} WHERE nickname like '${userName}%' OR name like '${userName}%';
+      `);
+      return result[0];
+    } catch (err) {
+      throw new Error(err.message);
+    }
+  }
+
   private async isFollowing(users: Friendship): Promise<boolean> {
     const result = await this.getConnection()
       .select("*")
